@@ -1,7 +1,28 @@
 #!/usr/bin/env node
 
 const http = require('http');
+const https = require('https');
 const app = require('../app');
+const path = require('path');
+const fs = require('fs');
+let serve;
+let options;
+const certsPath = path.join(__dirname,'certs', 'server');
+
+//
+// SSL Certificates
+//
+options = {
+  key: fs.readFileSync(path.join(certsPath, 'my-server.key.pem')),
+  // This certificate should be a bundle containing your server certificate and any intermediates
+  // cat certs/cert.pem certs/chain.pem > certs/server-bundle.pem
+  cert: fs.readFileSync(path.join(certsPath, 'my-server.crt.pem')),
+  // ca only needs to be specified for peer-certificates
+  //, ca: [ fs.readFileSync(path.join(caCertsPath, 'my-root-ca.crt.pem')) ]
+  requestCert: false,
+  rejectUnauthorized: true
+};
+
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {
@@ -25,7 +46,8 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 // Create the HTTP server
-const server = http.createServer(app);
+//const server = http.createServer(app);
+const server = https.createServer(options,app);
 
 function onError(error) {
   if (error.syscall !== 'listen') {
