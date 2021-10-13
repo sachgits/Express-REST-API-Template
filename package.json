@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
+    "axios": "0.21.4",
     "express": "^4.17.1",
     "helmet": "^3.23.3",
     "http-errors": "^1.8.0",
